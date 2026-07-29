@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase";
 import { Shell } from "@/components/Shell";
+import { SeletorGraduacao, type Faixa } from "@/components/Graduacao";
 import { carregarImagem, extrairDescritor, prepararMotor, redimensionar } from "@/lib/face";
 
-type Faixa = { id: string; nome: string; cor_hex: string; kids: boolean; ordem: number };
 type Turma = { id: string; nome: string; faixa_etaria: string };
 
 const TEXTO_VERSAO = "v1-2026-07";
@@ -23,6 +23,7 @@ export default function NovoAluno() {
   const [nascimento, setNascimento] = useState("");
   const [telefone, setTelefone] = useState("");
   const [faixaId, setFaixaId] = useState("");
+  const [graus, setGraus] = useState(0);
   const [turmasSel, setTurmasSel] = useState<Set<string>>(new Set());
 
   const [respNome, setRespNome] = useState("");
@@ -45,7 +46,7 @@ export default function NovoAluno() {
   useEffect(() => {
     (async () => {
       const [{ data: f }, { data: t }] = await Promise.all([
-        sb.from("faixa").select("id, nome, cor_hex, kids, ordem").order("ordem"),
+        sb.from("faixa").select("id, nome, cor_hex, kids, ordem, graus_max").order("ordem"),
         sb.from("turma").select("id, nome, faixa_etaria").eq("ativo", true).order("nome"),
       ]);
       setFaixas((f ?? []) as Faixa[]);
@@ -100,6 +101,7 @@ export default function NovoAluno() {
           nascimento: nascimento || null,
           telefone: telefone.trim() || null,
           faixa_id: faixaId || null,
+          graus,
           responsavel_nome: respNome.trim() || null,
           responsavel_telefone: respTel.trim() || null,
           responsavel_parentesco: respParentesco.trim() || null,
@@ -159,8 +161,6 @@ export default function NovoAluno() {
     }
   }
 
-  const faixasVisiveis = faixas.filter((f) => (menor ? true : !f.kids));
-
   return (
     <Shell titulo="Novo aluno" subtitulo="Cadastro, biometria e consentimentos">
       <form onSubmit={salvar} className="space-y-3">
@@ -178,17 +178,14 @@ export default function NovoAluno() {
               <input className="campo" inputMode="tel" placeholder="(34) 9…" value={telefone} onChange={(e) => setTelefone(e.target.value)} />
             </div>
           </div>
-          <div>
-            <label className="text-[11px] text-texto3 block mb-1.5">Faixa</label>
-            <select className="campo" value={faixaId} onChange={(e) => setFaixaId(e.target.value)}>
-              <option value="">Sem faixa ainda</option>
-              {faixasVisiveis.map((f) => (
-                <option key={f.id} value={f.id}>
-                  {f.nome} {f.kids ? "(kids)" : ""}
-                </option>
-              ))}
-            </select>
-          </div>
+          <SeletorGraduacao
+            faixas={faixas}
+            faixaId={faixaId}
+            graus={graus}
+            onFaixa={setFaixaId}
+            onGraus={setGraus}
+            mostrarKids={menor}
+          />
         </section>
 
         {/* -------------------------------------------------- responsável -- */}

@@ -527,35 +527,47 @@ order by (aulas_no_ciclo::numeric / nullif(aulas_por_grau,0)) desc;
 alter table public.escola
   add column if not exists codigo_convite text unique;
 
--- Professor entra digitando o código da escola. Sem isso o perfil fica órfão
--- e não enxerga nada (a RLS barra tudo).
-create or replace function public.vincular_escola(p_codigo text)
-returns table (escola_id uuid, escola_nome text, papel text)
+-- Os nomes das colunas de retorno NAO podem repetir nomes de colunas das tabelas
+-- usadas no corpo: o PostgreSQL nao sabe a qual delas voce se refere e aborta com
+-- 42702 (column reference is ambiguous). Por isso o prefixo out_.
+drop function if exists public.vincular_escola(text);
+
+create function public.vincular_escola(p_codigo text)
+returns table (out_escola_id uuid, out_escola_nome text, out_papel text)
 language plpgsql security definer set search_path = public as $$
 declare
-  v_escola public.escola%rowtype;
+  v_escola   public.escola%rowtype;
   v_primeiro boolean;
+  v_papel    text;
 begin
   select * into v_escola from public.escola
    where upper(codigo_convite) = upper(trim(p_codigo));
 
   if not found then
-    raise exception 'Código inválido' using errcode = 'P0002';
+    raise exception 'Codigo invalido' using errcode = 'P0002';
   end if;
+
+  -- rede de seguranca: se o gatilho de novo usuario nao rodou, cria o perfil aqui
+  insert into public.perfil (id, nome) values (auth.uid(), '')
+    on conflict (id) do nothing;
 
   -- o primeiro a entrar vira dono; os seguintes entram como professor
   select not exists (select 1 from public.perfil p where p.escola_id = v_escola.id)
     into v_primeiro;
 
-  update public.perfil
+  update public.perfil p
      set escola_id = v_escola.id,
-         papel = case when v_primeiro then 'dono' else coalesce(papel,'professor') end
-   where id = auth.uid();
+         papel = case when v_primeiro then 'dono' else coalesce(p.papel, 'professor') end
+   where p.id = auth.uid()
+  returning p.papel into v_papel;
 
-  return query
-    select v_escola.id, v_escola.nome,
-           (select p.papel from public.perfil p where p.id = auth.uid());
+  if v_papel is null then
+    raise exception 'Perfil nao encontrado' using errcode = 'P0002';
+  end if;
+
+  return query select v_escola.id, v_escola.nome, v_papel;
 end $$;
+
 
 grant execute on function public.vincular_escola(text) to authenticated;
 

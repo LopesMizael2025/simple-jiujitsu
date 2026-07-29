@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+html,
+body {
+  background:
+    radial-gradient(1100px 640px at 12% -8%, #16202c 0%, transparent 55%),
+    radial-gradient(900px 560px at 96% 104%, #1d1416 0%, transparent 55%),
+    #0a0e13;
+  color: #e8eef5;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 100%;
+}
+
+/* Área segura em iPhone com notch */
+body {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@layer components {
+  .cartao {
+    @apply bg-cartao border border-borda rounded-2xl p-4;
+  }
+  .rotulo {
+    @apply text-[10px] font-bold tracking-widest uppercase text-texto3 mb-2;
+  }
+  .campo {
+    @apply w-full bg-painel border border-borda rounded-xl px-3.5 py-3 text-[15px]
+           text-texto placeholder:text-texto3 outline-none
+           focus:border-borda2 focus:ring-2 focus:ring-ok/20 transition;
+  }
+  .btn {
+    @apply w-full rounded-xl px-4 py-3.5 text-[15px] font-bold transition
+           flex items-center justify-center gap-2 disabled:opacity-40
+           disabled:cursor-not-allowed active:scale-[.985];
+  }
+  .btn-pri {
+    @apply btn bg-ok text-[#04231b] hover:brightness-110
+           shadow-[0_6px_20px_rgba(46,230,168,.22)];
+  }
+  .btn-sec {
+    @apply btn bg-painel text-texto border border-borda2 hover:bg-[#22303f];
+  }
+  .btn-perigo {
+    @apply btn bg-sangue/15 text-sangue border border-sangue/40 hover:bg-sangue/25;
+  }
+  .selo {
+    @apply text-[10px] font-bold px-2 py-1 rounded-md tracking-wide;
+  }
+}
+
+/* Scrollbar discreta */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #243244;
+  border-radius: 99px;
+}

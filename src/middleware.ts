@@ -35,6 +35,15 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Já logado não vê tela de login. É isso que faz o app abrir direto
+  // quando o professor toca no ícone da tela de início.
+  if (user && path.startsWith("/entrar")) {
+    const url = req.nextUrl.clone();
+    url.pathname = "/inicio";
+    url.search = "";
+    return NextResponse.redirect(url);
+  }
+
   // Logado mas ainda sem escola vinculada → manda digitar o código
   if (user && !publica && path !== "/vincular") {
     const { data: perfil } = await supabase

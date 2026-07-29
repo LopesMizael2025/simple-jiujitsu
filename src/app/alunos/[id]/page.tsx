@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { supabaseServer } from "@/lib/supabase-server";
 import { Shell, Selo, Iniciais } from "@/components/Shell";
@@ -39,7 +40,22 @@ export default async function AlunoDetalhe({ params }: { params: { id: string } 
   const temBio = (bio ?? []).length > 0;
 
   return (
-    <Shell titulo={a.nome} subtitulo={`${faixa?.nome ?? "Sem faixa"} · ${a.graus} ${a.graus === 1 ? "grau" : "graus"}`}>
+    <Shell
+      titulo={a.nome}
+      subtitulo={`${faixa?.nome ?? "Sem faixa"} · ${a.graus} ${a.graus === 1 ? "grau" : "graus"}`}
+      acao={
+        <Link
+          href={`/alunos/${a.id}/editar`}
+          className="flex items-center gap-1.5 text-[12.5px] font-bold text-ok bg-ok/10
+                     border border-ok/30 rounded-lg px-3 py-1.5 shrink-0"
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" />
+          </svg>
+          Editar
+        </Link>
+      }
+    >
       <section className="cartao flex items-center gap-4">
         <Iniciais nome={a.nome} cor={faixa?.cor_hex} tamanho={58} />
         <div className="min-w-0 flex-1">

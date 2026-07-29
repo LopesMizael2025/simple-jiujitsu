@@ -1,9 +1,12 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase";
+
+const LEMBRAR = "simple:ultimo-acesso";
 
 const ITENS = [
   { href: "/inicio", nome: "Início", d: "M3 10.5 12 3l9 7.5V21H3z M9 21v-7h6v7" },
@@ -24,6 +27,19 @@ export function Shell({
 }) {
   const path = usePathname();
   const router = useRouter();
+
+  // Guarda quem está usando o app neste aparelho. É isso que faz a tela de
+  // login oferecer "Continuar como fulano" depois — sem depender de o professor
+  // ter pedido um link novo. Sobrevive ao logout de propósito.
+  useEffect(() => {
+    supabaseBrowser()
+      .auth.getUser()
+      .then(({ data }) => {
+        const id = data.user?.email || data.user?.phone;
+        if (id) localStorage.setItem(LEMBRAR, id);
+      })
+      .catch(() => {});
+  }, []);
 
   async function sair() {
     await supabaseBrowser().auth.signOut();

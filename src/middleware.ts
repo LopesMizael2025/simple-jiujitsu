@@ -31,7 +31,10 @@ export async function middleware(req: NextRequest) {
   if (!user && !publica) {
     const url = req.nextUrl.clone();
     url.pathname = "/entrar";
-    url.searchParams.set("proximo", path);
+    // O destino precisa levar a query junto: um convite chega como
+    // /vincular?c=<token> e sem isso o token se perderia no login.
+    url.search = "";
+    url.searchParams.set("proximo", path + req.nextUrl.search);
     return NextResponse.redirect(url);
   }
 

@@ -9,7 +9,7 @@
 -- SEGURANCA: so apaga turma que nao tem matricula nem aula registrada.
 -- Se ja houver aluno matriculado, a turma antiga e apenas desativada.
 -- dia_semana: 0=dom 1=seg 2=ter 3=qua 4=qui 5=sex 6=sab
--- Duracao: 1h por aula (o quadro nao informa o termino; ajuste se precisar).
+-- Duracao: Jiu-Jitsu adulto (com e sem kimono) 1h30; kids e Muay Thai 1h.
 -- ============================================================================
 
 do $$
@@ -44,20 +44,20 @@ begin
   values (v_escola, v_jj, 'Jiu-Jitsu Adulto', 'adulto', 'Com kimono')
   returning id into v_id;
   insert into public.turma_horario (turma_id, dia_semana, hora_inicio, hora_fim) values
-    (v_id, 1, '12:00', '13:00'),   -- segunda 12h
-    (v_id, 5, '12:00', '13:00'),   -- sexta 12h
-    (v_id, 1, '20:00', '21:00'),   -- segunda 20h
-    (v_id, 2, '20:00', '21:00'),   -- terca 20h
-    (v_id, 3, '20:00', '21:00'),   -- quarta 20h
-    (v_id, 5, '19:00', '20:00');   -- sexta 19h
+    (v_id, 1, '12:00', '13:30'),   -- segunda 12h
+    (v_id, 5, '12:00', '13:30'),   -- sexta 12h
+    (v_id, 1, '20:00', '21:30'),   -- segunda 20h
+    (v_id, 2, '20:00', '21:30'),   -- terca 20h
+    (v_id, 3, '20:00', '21:30'),   -- quarta 20h
+    (v_id, 5, '19:00', '20:30');   -- sexta 19h
 
   -- ================================================ JIU-JITSU ADULTO NO GI ==
   insert into public.turma (escola_id, modalidade_id, nome, faixa_etaria, nivel)
   values (v_escola, v_jj, 'Jiu-Jitsu Adulto No Gi', 'adulto', 'Sem kimono')
   returning id into v_id;
   insert into public.turma_horario (turma_id, dia_semana, hora_inicio, hora_fim) values
-    (v_id, 3, '12:00', '13:00'),   -- quarta 12h
-    (v_id, 4, '20:00', '21:00');   -- quinta 20h
+    (v_id, 3, '12:00', '13:30'),   -- quarta 12h
+    (v_id, 4, '20:00', '21:30');   -- quinta 20h
 
   -- ================================================== JIU-JITSU KIDS 4 a 7 ==
   insert into public.turma (escola_id, modalidade_id, nome, faixa_etaria, nivel)

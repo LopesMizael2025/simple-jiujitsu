@@ -665,14 +665,14 @@ insert into public.turma_horario (turma_id, dia_semana, hora_inicio, hora_fim)
 select t.id, g.dia, g.ini, g.fim
 from public.turma t
 join (values
-  ('Jiu-Jitsu Adulto',1,time '12:00',time '13:00'),
-  ('Jiu-Jitsu Adulto',5,time '12:00',time '13:00'),
-  ('Jiu-Jitsu Adulto',1,time '20:00',time '21:00'),
-  ('Jiu-Jitsu Adulto',2,time '20:00',time '21:00'),
-  ('Jiu-Jitsu Adulto',3,time '20:00',time '21:00'),
-  ('Jiu-Jitsu Adulto',5,time '19:00',time '20:00'),
-  ('Jiu-Jitsu Adulto No Gi',3,time '12:00',time '13:00'),
-  ('Jiu-Jitsu Adulto No Gi',4,time '20:00',time '21:00'),
+  ('Jiu-Jitsu Adulto',1,time '12:00',time '13:30'),
+  ('Jiu-Jitsu Adulto',5,time '12:00',time '13:30'),
+  ('Jiu-Jitsu Adulto',1,time '20:00',time '21:30'),
+  ('Jiu-Jitsu Adulto',2,time '20:00',time '21:30'),
+  ('Jiu-Jitsu Adulto',3,time '20:00',time '21:30'),
+  ('Jiu-Jitsu Adulto',5,time '19:00',time '20:30'),
+  ('Jiu-Jitsu Adulto No Gi',3,time '12:00',time '13:30'),
+  ('Jiu-Jitsu Adulto No Gi',4,time '20:00',time '21:30'),
   ('Jiu-Jitsu Kids 4 a 7',1,time '18:00',time '19:00'),
   ('Jiu-Jitsu Kids 4 a 7',3,time '18:00',time '19:00'),
   ('Jiu-Jitsu Kids 7 a 11',2,time '09:00',time '10:00'),

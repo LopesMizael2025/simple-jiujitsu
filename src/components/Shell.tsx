@@ -39,6 +39,21 @@ export function Shell({
         if (id) localStorage.setItem(LEMBRAR, id);
       })
       .catch(() => {});
+
+    // Baixa os ~13 MB do reconhecimento facial em segundo plano, assim que o
+    // professor entra. Sem isso a espera cai toda em cima da primeira chamada,
+    // com ele parado na frente da turma. Falha em silêncio de propósito:
+    // se não der, a tela de chamada baixa na hora como antes.
+    const ocioso =
+      typeof window !== "undefined" && "requestIdleCallback" in window
+        ? (window as any).requestIdleCallback
+        : (fn: () => void) => setTimeout(fn, 2500);
+
+    ocioso(() => {
+      import("@/lib/face")
+        .then((m) => m.prepararMotor())
+        .catch(() => {});
+    });
   }, []);
 
   async function sair() {
@@ -133,6 +148,36 @@ function contraste(hex: string) {
   const g = parseInt(h.slice(2, 4), 16);
   const b = parseInt(h.slice(4, 6), 16);
   return (r * 299 + g * 587 + b * 114) / 1000 > 140 ? "#0A0E13" : "#FFFFFF";
+}
+
+/**
+ * Foto do aluno com as iniciais como reserva.
+ *
+ * Professor reconhece rosto, não nome — principalmente com quarenta crianças.
+ * A miniatura só existe se o aluno consentiu uso de imagem; sem ela, cai nas
+ * iniciais coloridas pela faixa, que já dão uma pista visual.
+ */
+export function Foto({
+  src,
+  nome,
+  cor,
+  tamanho = 46,
+}: {
+  src?: string | null;
+  nome: string;
+  cor?: string | null;
+  tamanho?: number;
+}) {
+  if (!src) return <Iniciais nome={nome} cor={cor} tamanho={tamanho} />;
+  return (
+    <div
+      className="rounded-xl overflow-hidden shrink-0 bg-painel"
+      style={{ width: tamanho, height: tamanho, boxShadow: `0 0 0 2px ${cor ?? "#243244"}` }}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={src} alt={nome} className="w-full h-full object-cover" loading="lazy" />
+    </div>
+  );
 }
 
 export function Vazio({ titulo, texto, acao }: { titulo: string; texto: string; acao?: React.ReactNode }) {

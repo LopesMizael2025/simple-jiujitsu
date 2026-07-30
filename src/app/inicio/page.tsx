@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { supabaseServer } from "@/lib/supabase-server";
-import { Shell, Selo, Iniciais } from "@/components/Shell";
+import { Shell, Selo, Foto } from "@/components/Shell";
+import { BotaoWhatsapp } from "@/components/BotaoWhatsapp";
 
 export const dynamic = "force-dynamic";
 
@@ -28,7 +29,7 @@ export default async function Inicio() {
       .select("id, hora_inicio, hora_fim, turma:turma(id, nome, faixa_etaria, ativo)")
       .eq("dia_semana", diaSemana)
       .order("hora_inicio"),
-    sb.from("v_risco_evasao").select("aluno_id, nome, cor_hex, dias_sem_treinar, aulas_30d").limit(6),
+    sb.from("v_risco_evasao").select("aluno_id, nome, cor_hex, foto_thumb, telefone, responsavel_nome, responsavel_telefone, dias_sem_treinar, aulas_30d").limit(6),
     sb.from("aluno").select("*", { count: "exact", head: true }).eq("status", "ativo"),
     sb.from("presenca").select("*", { count: "exact", head: true }).gte("criado_em", trintaDias),
   ]);
@@ -85,24 +86,27 @@ export default async function Inicio() {
           <div className="rotulo text-atencao">Precisa da sua atenção</div>
           <div className="divide-y divide-borda -my-2">
             {risco.map((r: any) => (
-              <Link key={r.aluno_id} href={`/alunos/${r.aluno_id}`} className="flex items-center gap-3 py-2.5">
-                <Iniciais nome={r.nome} cor={r.cor_hex} tamanho={32} />
-                <div className="min-w-0 flex-1">
-                  <div className="text-[13px] font-semibold truncate">{r.nome}</div>
-                  <div className="text-[11px] text-texto2">
-                    {r.dias_sem_treinar == null
-                      ? "Nunca registrou presença"
-                      : `Sem treinar há ${r.dias_sem_treinar} dias`}
+              <div key={r.aluno_id} className="flex items-center gap-3 py-2">
+                <Link href={`/alunos/${r.aluno_id}`} className="flex items-center gap-3 min-w-0 flex-1">
+                  <Foto src={r.foto_thumb} nome={r.nome} cor={r.cor_hex} tamanho={38} />
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[13px] font-semibold truncate">{r.nome}</div>
+                    <div className="text-[11px] text-texto2">
+                      {r.dias_sem_treinar == null
+                        ? "Nunca registrou presença"
+                        : `Sem treinar há ${r.dias_sem_treinar} dias`}
+                    </div>
                   </div>
-                </div>
-                <Selo tom={(r.dias_sem_treinar ?? 99) >= 21 ? "perigo" : "atencao"}>
-                  {(r.dias_sem_treinar ?? 99) >= 21 ? "Risco" : "Aviso"}
-                </Selo>
-              </Link>
+                  <Selo tom={(r.dias_sem_treinar ?? 99) >= 21 ? "perigo" : "atencao"}>
+                    {(r.dias_sem_treinar ?? 99) >= 21 ? "Risco" : "Aviso"}
+                  </Selo>
+                </Link>
+                <BotaoWhatsapp aluno={r} dias={r.dias_sem_treinar} compacto />
+              </div>
             ))}
           </div>
           <p className="text-[11px] text-texto3 mt-3 leading-relaxed">
-            O alerta vem da queda de frequência — aparece antes de o aluno sumir de vez.
+            O alerta vem da queda de frequência, antes de o aluno sumir de vez. O botão verde abre o WhatsApp com a mensagem pronta.
           </p>
         </section>
       )}

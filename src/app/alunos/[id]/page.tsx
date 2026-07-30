@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { supabaseServer } from "@/lib/supabase-server";
-import { Shell, Selo, Iniciais } from "@/components/Shell";
+import { Shell, Selo, Foto } from "@/components/Shell";
+import { BotaoWhatsapp } from "@/components/BotaoWhatsapp";
 import { RevogarBiometria } from "./RevogarBiometria";
 
 export const dynamic = "force-dynamic";
@@ -13,7 +14,7 @@ export default async function AlunoDetalhe({ params }: { params: { id: string } 
     await Promise.all([
       sb
         .from("aluno")
-        .select("id, nome, nascimento, telefone, responsavel_nome, responsavel_parentesco, status, graus, aulas_no_ciclo, faixa:faixa(nome, cor_hex, aulas_por_grau, graus_max)")
+        .select("id, nome, nascimento, telefone, foto_thumb, responsavel_nome, responsavel_telefone, responsavel_parentesco, status, graus, aulas_no_ciclo, faixa:faixa(nome, cor_hex, aulas_por_grau, graus_max)")
         .eq("id", params.id)
         .maybeSingle(),
       sb.from("v_aluno_frequencia").select("aulas_30d, dias_sem_treinar, ultimo_treino").eq("aluno_id", params.id).maybeSingle(),
@@ -57,7 +58,7 @@ export default async function AlunoDetalhe({ params }: { params: { id: string } 
       }
     >
       <section className="cartao flex items-center gap-4">
-        <Iniciais nome={a.nome} cor={faixa?.cor_hex} tamanho={58} />
+        <Foto src={a.foto_thumb} nome={a.nome} cor={faixa?.cor_hex} tamanho={58} />
         <div className="min-w-0 flex-1">
           <div className="font-bold text-[15px] truncate">{a.nome}</div>
           <div className="text-[12px] text-texto2 mt-1">
@@ -98,6 +99,17 @@ export default async function AlunoDetalhe({ params }: { params: { id: string } 
           <div className="text-[10.5px] text-texto2 mt-1.5">Dias sem treinar</div>
         </div>
       </div>
+
+      {(freq?.dias_sem_treinar ?? 0) >= 14 && (
+        <section className="cartao border-atencao/30">
+          <div className="rotulo text-atencao">Este aluno sumiu</div>
+          <p className="text-[12.5px] text-texto2 leading-relaxed mb-3">
+            Sem treinar há {freq?.dias_sem_treinar} dias. Um contato agora costuma resolver — depois
+            de um mês parado, fica bem mais difícil trazer de volta.
+          </p>
+          <BotaoWhatsapp aluno={a} dias={freq?.dias_sem_treinar ?? null} />
+        </section>
+      )}
 
       <section className="cartao">
         <div className="rotulo">Biometria e consentimentos</div>

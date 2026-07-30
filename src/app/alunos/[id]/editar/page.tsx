@@ -38,6 +38,7 @@ export default function EditarAluno({ params }: { params: { id: string } }) {
 
   const [temBio, setTemBio] = useState(false);
   const [consBio, setConsBio] = useState(false);
+  const [consImagem, setConsImagem] = useState(false);
   const [novoRosto, setNovoRosto] = useState<{ descritor: number[]; score: number; thumb: string } | null>(null);
   const [analisando, setAnalisando] = useState(false);
   const [statusRosto, setStatusRosto] = useState<string | null>(null);
@@ -65,11 +66,10 @@ export default function EditarAluno({ params }: { params: { id: string } }) {
           sb.from("face_template").select("id").eq("aluno_id", params.id),
           sb
             .from("consentimento")
-            .select("concedido")
+            .select("tipo, concedido, criado_em")
             .eq("aluno_id", params.id)
-            .eq("tipo", "biometria")
-            .order("criado_em", { ascending: false })
-            .limit(1),
+            .in("tipo", ["biometria", "imagem"])
+            .order("criado_em", { ascending: false }),
         ]);
 
       if (!a) {
@@ -98,7 +98,13 @@ export default function EditarAluno({ params }: { params: { id: string } }) {
       setOrig({ faixaId: a.faixa_id ?? "", graus: a.graus ?? 0, turmas: sel });
 
       setTemBio((bio ?? []).length > 0);
-      setConsBio(((cons ?? []) as { concedido: boolean }[])[0]?.concedido ?? false);
+      // consentimento vigente = o registro mais recente de cada tipo
+      const vig = new Map<string, boolean>();
+      for (const c of (cons ?? []) as { tipo: string; concedido: boolean }[]) {
+        if (!vig.has(c.tipo)) vig.set(c.tipo, c.concedido);
+      }
+      setConsBio(vig.get("biometria") ?? false);
+      setConsImagem(vig.get("imagem") ?? false);
       setCarregando(false);
     })();
     prepararMotor().catch(() => {});
@@ -201,6 +207,12 @@ export default function EditarAluno({ params }: { params: { id: string } }) {
           qualidade: novoRosto.score,
         });
         if (error) throw error;
+
+        // A miniatura e uma imagem de verdade, diferente do vetor: so guarda
+        // se o aluno autorizou uso de imagem.
+        if (consImagem) {
+          await sb.from("aluno").update({ foto_thumb: novoRosto.thumb }).eq("id", params.id);
+        }
       }
 
       router.push(`/alunos/${params.id}`);
@@ -374,6 +386,12 @@ export default function EditarAluno({ params }: { params: { id: string } }) {
                 </p>
               )}
               {statusRosto && !analisando && <p className="text-atencao mt-1.5">{statusRosto}</p>}
+              {consBio && !consImagem && (
+                <p className="text-texto3 mt-1.5 text-[11px] leading-relaxed">
+                  Sem consentimento de uso de imagem: guardamos só o vetor, e a foto não aparece
+                  nas listas.
+                </p>
+              )}
             </div>
           </div>
         </section>

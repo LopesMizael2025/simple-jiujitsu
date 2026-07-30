@@ -38,7 +38,22 @@ export default async function Inicio() {
   const saudacao = hoje.getHours() < 12 ? "Bom dia" : hoje.getHours() < 18 ? "Boa tarde" : "Boa noite";
 
   return (
-    <Shell titulo={`${saudacao}${perfil?.nome ? `, ${perfil.nome.split(" ")[0]}` : ""}`} subtitulo={`${DIAS[diaSemana]}, ${hoje.toLocaleDateString("pt-BR")}`}>
+    <Shell
+      titulo={`${saudacao}${perfil?.nome ? `, ${perfil.nome.split(" ")[0]}` : ""}`}
+      subtitulo={`${DIAS[diaSemana]}, ${hoje.toLocaleDateString("pt-BR")}`}
+      acao={
+        <Link
+          href="/equipe"
+          className="flex items-center gap-1.5 text-[12.5px] font-bold text-texto2 border border-borda rounded-lg px-3 py-1.5 shrink-0"
+          title="Equipe"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 4.6a3.4 3.4 0 1 0 0 6.8 3.4 3.4 0 0 0 0-6.8 M3.2 20a6 6 0 0 1 11.6 0 M16.5 5.6a3.4 3.4 0 0 1 0 6.6 M18 14.4A6 6 0 0 1 21 20" />
+          </svg>
+          Equipe
+        </Link>
+      }
+    >
       <div className="grid grid-cols-2 gap-3">
         <Metrica valor={String(totalAlunos ?? 0)} texto="Alunos ativos" />
         <Metrica valor={String(totalPresencas ?? 0)} texto="Presenças em 30 dias" cor="#2EE6A8" />

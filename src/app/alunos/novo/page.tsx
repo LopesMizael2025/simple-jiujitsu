@@ -41,6 +41,11 @@ export default function NovoAluno() {
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
 
+  // Modo tatame: nome + turma + rosto e pronto. O resto fica recolhido.
+  // Um cadastro completo leva ~90s; com 150 alunos isso e meio dia de digitacao.
+  const [detalhes, setDetalhes] = useState(false);
+  const [observacoes, setObservacoes] = useState("");
+
   const menor = ehMenor(nascimento);
 
   useEffect(() => {
@@ -102,9 +107,12 @@ export default function NovoAluno() {
           telefone: telefone.trim() || null,
           faixa_id: faixaId || null,
           graus,
+          // a miniatura so entra com consentimento de imagem (LGPD)
+          foto_thumb: rosto && consImagem ? rosto.thumb : null,
           responsavel_nome: respNome.trim() || null,
           responsavel_telefone: respTel.trim() || null,
           responsavel_parentesco: respParentesco.trim() || null,
+          observacoes: observacoes.trim() || null,
         })
         .select("id")
         .single();
@@ -162,22 +170,24 @@ export default function NovoAluno() {
   }
 
   return (
-    <Shell titulo="Novo aluno" subtitulo="Cadastro, biometria e consentimentos">
+    <Shell titulo="Novo aluno" subtitulo={detalhes ? "Cadastro completo" : "O essencial primeiro"}>
       <form onSubmit={salvar} className="space-y-3">
         {/* -------------------------------------------------------- dados -- */}
         <section className="cartao space-y-3">
           <div className="rotulo">Dados do aluno</div>
           <input className="campo" placeholder="Nome completo" value={nome} onChange={(e) => setNome(e.target.value)} />
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-[11px] text-texto3 block mb-1.5">Nascimento</label>
-              <input className="campo" type="date" value={nascimento} onChange={(e) => setNascimento(e.target.value)} />
+          {detalhes && (
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-[11px] text-texto2 block mb-1.5">Nascimento</label>
+                <input className="campo" type="date" value={nascimento} onChange={(e) => setNascimento(e.target.value)} />
+              </div>
+              <div>
+                <label className="text-[11px] text-texto2 block mb-1.5">Telefone</label>
+                <input className="campo" inputMode="tel" placeholder="(34) 9…" value={telefone} onChange={(e) => setTelefone(e.target.value)} />
+              </div>
             </div>
-            <div>
-              <label className="text-[11px] text-texto3 block mb-1.5">Telefone</label>
-              <input className="campo" inputMode="tel" placeholder="(34) 9…" value={telefone} onChange={(e) => setTelefone(e.target.value)} />
-            </div>
-          </div>
+          )}
           <SeletorGraduacao
             faixas={faixas}
             faixaId={faixaId}
@@ -307,6 +317,28 @@ export default function NovoAluno() {
             bloqueia a matrícula, e a revogação apaga o vetor na hora.
           </p>
         </section>
+
+        {!detalhes && (
+          <button
+            type="button"
+            onClick={() => setDetalhes(true)}
+            className="w-full text-[13px] font-semibold text-[#4d9fff] py-3 min-h-[48px]"
+          >
+            + Preencher nascimento, telefone e observações
+          </button>
+        )}
+
+        {detalhes && (
+          <section className="cartao">
+            <div className="rotulo">Observações</div>
+            <textarea
+              className="campo min-h-[80px] resize-y"
+              placeholder="Lesão, restrição, histórico…"
+              value={observacoes}
+              onChange={(e) => setObservacoes(e.target.value)}
+            />
+          </section>
+        )}
 
         {erro && <p className="text-sangue text-[13px] leading-snug px-1">{erro}</p>}
 

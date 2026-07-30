@@ -652,30 +652,42 @@ begin
 
   -- ------------------------------------------------------------- turmas ----
   insert into public.turma (escola_id, modalidade_id, nome, faixa_etaria, nivel) values
-    (v_escola, v_jj, 'Jiu-Jitsu Adulto · Fundamentos', 'adulto', 'Iniciante'),
-    (v_escola, v_jj, 'Jiu-Jitsu Adulto · Avançado',    'adulto', 'Avançado'),
-    (v_escola, v_jj, 'Jiu-Jitsu Kids 6-9',             'kids',   'Iniciante'),
-    (v_escola, v_jj, 'Jiu-Jitsu Kids 10-13',           'kids',   'Intermediário'),
-    (v_escola, v_mt, 'Muay Thai',                      'adulto', null);
+    (v_escola,v_jj,'Jiu-Jitsu Adulto','adulto','Com kimono'),
+    (v_escola,v_jj,'Jiu-Jitsu Adulto No Gi','adulto','Sem kimono'),
+    (v_escola,v_jj,'Jiu-Jitsu Kids 4 a 7','kids','Com kimono'),
+    (v_escola,v_jj,'Jiu-Jitsu Kids 7 a 11','kids','Com kimono'),
+    (v_escola,v_jj,'Jiu-Jitsu Kids No Gi 7 a 11','kids','Sem kimono'),
+    (v_escola,v_mt,'Muay Thai','adulto',null);
 end $$;
 
--- Horários de exemplo (seg/qua/sex) para as turmas criadas acima
+-- Grade real da Sala 01 (artes marciais). dia_semana: 1=seg ... 5=sex
 insert into public.turma_horario (turma_id, dia_semana, hora_inicio, hora_fim)
-select t.id, d.dia, h.ini, h.fim
+select t.id, g.dia, g.ini, g.fim
 from public.turma t
-cross join lateral (values (1),(3),(5)) as d(dia)
-cross join lateral (
-  select case
-    when t.nome like '%Fundamentos%'  then time '06:30'
-    when t.nome like '%Kids 6-9%'     then time '16:00'
-    when t.nome like '%Kids 10-13%'   then time '17:30'
-    when t.nome like '%Avançado%'     then time '20:00'
-    else time '21:30' end as ini,
-  case
-    when t.nome like '%Fundamentos%'  then time '07:45'
-    when t.nome like '%Kids 6-9%'     then time '17:00'
-    when t.nome like '%Kids 10-13%'   then time '18:30'
-    when t.nome like '%Avançado%'     then time '21:30'
-    else time '22:30' end as fim
-) h
+join (values
+  ('Jiu-Jitsu Adulto',1,time '12:00',time '13:00'),
+  ('Jiu-Jitsu Adulto',5,time '12:00',time '13:00'),
+  ('Jiu-Jitsu Adulto',1,time '20:00',time '21:00'),
+  ('Jiu-Jitsu Adulto',2,time '20:00',time '21:00'),
+  ('Jiu-Jitsu Adulto',3,time '20:00',time '21:00'),
+  ('Jiu-Jitsu Adulto',5,time '19:00',time '20:00'),
+  ('Jiu-Jitsu Adulto No Gi',3,time '12:00',time '13:00'),
+  ('Jiu-Jitsu Adulto No Gi',4,time '20:00',time '21:00'),
+  ('Jiu-Jitsu Kids 4 a 7',1,time '18:00',time '19:00'),
+  ('Jiu-Jitsu Kids 4 a 7',3,time '18:00',time '19:00'),
+  ('Jiu-Jitsu Kids 7 a 11',2,time '09:00',time '10:00'),
+  ('Jiu-Jitsu Kids 7 a 11',4,time '09:00',time '10:00'),
+  ('Jiu-Jitsu Kids 7 a 11',1,time '18:00',time '19:00'),
+  ('Jiu-Jitsu Kids 7 a 11',3,time '18:00',time '19:00'),
+  ('Jiu-Jitsu Kids No Gi 7 a 11',2,time '18:00',time '19:00'),
+  ('Jiu-Jitsu Kids No Gi 7 a 11',4,time '18:00',time '19:00'),
+  ('Muay Thai',2,time '07:00',time '08:00'),
+  ('Muay Thai',4,time '07:00',time '08:00'),
+  ('Muay Thai',1,time '19:00',time '20:00'),
+  ('Muay Thai',2,time '19:00',time '20:00'),
+  ('Muay Thai',3,time '19:00',time '20:00'),
+  ('Muay Thai',4,time '19:00',time '20:00'),
+  ('Muay Thai',5,time '18:00',time '19:00')
+) as g(turma,dia,ini,fim) on g.turma = t.nome
 where t.escola_id = (select id from public.escola where slug = 'simple');
+

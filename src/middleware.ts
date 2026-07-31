@@ -1,7 +1,26 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PUBLICAS = ["/entrar", "/auth", "/_next", "/favicon", "/icon", "/apple-icon", "/manifest", "/logo", "/simbolo", "/wordmark", "/models"];
+// Rotas que qualquer um abre sem estar logado. A vitrine e o cadastro são a
+// porta da frente do produto: sem eles, ninguém consegue virar cliente.
+const PUBLICAS = [
+  "/entrar",
+  "/cadastro",
+  "/recuperar",
+  "/nova-senha",
+  "/termos",
+  "/privacidade",
+  "/auth",
+  "/_next",
+  "/favicon",
+  "/icon",
+  "/apple-icon",
+  "/manifest",
+  "/logo",
+  "/simbolo",
+  "/wordmark",
+  "/models",
+];
 
 export async function middleware(req: NextRequest) {
   let res = NextResponse.next({ request: { headers: req.headers } });
@@ -26,7 +45,9 @@ export async function middleware(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
 
   const path = req.nextUrl.pathname;
-  const publica = PUBLICAS.some((p) => path.startsWith(p));
+  // "/" é a vitrine e precisa de comparação exata: com startsWith ela casaria
+  // com o site inteiro e ninguém precisaria mais fazer login.
+  const publica = path === "/" || PUBLICAS.some((p) => path.startsWith(p));
 
   if (!user && !publica) {
     const url = req.nextUrl.clone();
@@ -38,9 +59,9 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Já logado não vê tela de login. É isso que faz o app abrir direto
-  // quando o professor toca no ícone da tela de início.
-  if (user && path.startsWith("/entrar")) {
+  // Já logado não vê vitrine, login nem cadastro. É isso que faz o app abrir
+  // direto quando o professor toca no ícone na tela de início do celular.
+  if (user && (path === "/" || path.startsWith("/entrar") || path.startsWith("/cadastro"))) {
     const url = req.nextUrl.clone();
     url.pathname = "/inicio";
     url.search = "";

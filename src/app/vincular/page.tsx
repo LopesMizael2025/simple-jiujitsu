@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase";
 
@@ -19,12 +20,47 @@ function Aceitar() {
 
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState<string | null>(null);
+  const [academia, setAcademia] = useState<string | null>(null);
+  const [meta, setMeta] = useState<{ cidade?: string; uf?: string }>({});
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
 
   useEffect(() => {
-    sb.auth.getUser().then(({ data }) => setEmail(data.user?.email ?? null));
+    sb.auth.getUser().then(({ data }) => {
+      const u = data.user;
+      setEmail(u?.email ?? null);
+      const m = (u?.user_metadata ?? {}) as Record<string, string>;
+      if (m.escola_nome) setAcademia(m.escola_nome);
+      if (m.nome) setNome((n) => n || m.nome);
+      setMeta({ cidade: m.cidade, uf: m.uf });
+    });
   }, [sb]);
+
+  // Veio do cadastro e confirmou o e-mail: a escola nasce agora.
+  async function criarAcademia(e: React.FormEvent) {
+    e.preventDefault();
+    setErro(null);
+    setCarregando(true);
+    try {
+      const { error } = await sb.rpc("criar_escola", {
+        p_nome: academia,
+        p_cidade: meta.cidade || null,
+        p_uf: meta.uf || null,
+      });
+      if (error) throw new Error(error.message);
+
+      const uid = (await sb.auth.getUser()).data.user?.id;
+      if (nome.trim() && uid) {
+        await sb.from("perfil").update({ nome: nome.trim() }).eq("id", uid);
+      }
+      router.replace("/inicio");
+      router.refresh();
+    } catch (e) {
+      setErro((e as Error).message);
+    } finally {
+      setCarregando(false);
+    }
+  }
 
   async function aceitar(e: React.FormEvent) {
     e.preventDefault();
@@ -55,6 +91,34 @@ function Aceitar() {
     router.replace("/entrar");
   }
 
+  // ------------------------------------------ veio do cadastro proprio ----
+  if (!token && academia) {
+    return (
+      <form onSubmit={criarAcademia} className="cartao space-y-4">
+        <div>
+          <p className="font-bold text-[15px]">Criar a {academia}</p>
+          <p className="text-texto2 text-[13px] mt-1.5 leading-relaxed">
+            E-mail confirmado. Sua academia começa vazia, com as faixas de jiu-jitsu e muay thai já
+            prontas — você só cadastra as turmas e os alunos.
+          </p>
+        </div>
+        <div>
+          <div className="rotulo">Seu nome</div>
+          <input
+            className="campo"
+            placeholder="Como os alunos te chamam"
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+          />
+        </div>
+        {erro && <p className="text-sangue text-[13px] leading-snug">{erro}</p>}
+        <button className="btn-pri" disabled={carregando}>
+          {carregando ? "Criando…" : "Criar minha academia"}
+        </button>
+      </form>
+    );
+  }
+
   // ------------------------------------------------------- sem convite ----
   if (!token) {
     return (
@@ -62,9 +126,17 @@ function Aceitar() {
         <div>
           <p className="font-bold text-[15px]">Você precisa de um convite</p>
           <p className="text-texto2 text-[13px] mt-2 leading-relaxed">
-            O acesso é liberado pelo dono da escola, que envia um link direto para o seu e-mail.
-            Não existe mais código único: cada convite serve a uma pessoa só.
+            Para entrar numa academia que já existe, o dono envia um link direto para o seu e-mail.
+            Cada convite serve a uma pessoa só.
           </p>
+        </div>
+        <div className="rounded-xl border border-borda bg-[#0b1219] p-3.5">
+          <p className="text-[12.5px] text-texto2 leading-relaxed">
+            Se você é o dono e quer abrir a sua própria academia, o caminho é outro.
+          </p>
+          <Link href="/cadastro" className="btn-sec mt-2.5">
+            Criar minha academia
+          </Link>
         </div>
         {email && (
           <p className="text-texto3 text-[12px] leading-relaxed">

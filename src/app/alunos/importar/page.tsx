@@ -355,7 +355,7 @@ export default function ImportarAlunos() {
 
       {importando && (
         <div className="cartao !p-3.5">
-          <div className="h-1.5 bg-[#1c2836] rounded-full overflow-hidden">
+          <div className="h-1.5 bg-[#242128] rounded-full overflow-hidden">
             <div className="h-full rounded-full bg-ok transition-all" style={{ width: `${progresso}%` }} />
           </div>
           <p className="text-[12px] text-texto2 mt-2.5">Importando… {progresso}%</p>

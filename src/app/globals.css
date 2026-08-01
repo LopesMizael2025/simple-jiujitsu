@@ -4,62 +4,140 @@
 
 :root {
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  /* Vidro. O blur é caro: só as camadas que FLUTUAM o usam (barra, menu,
+     folhas, botões). Cartão de conteúdo é superfície fosca — na tela da
+     chamada são 25 cartões de uma vez, e é justamente ali que não pode
+     engasgar num celular simples. */
+  --vidro: rgba(255, 255, 255, 0.055);
+  --vidro-forte: rgba(255, 255, 255, 0.085);
+  --rim: rgba(255, 255, 255, 0.14);
+
+  /* O brilho na borda de cima é o que faz a peça parecer vidro e não
+     plástico: é a luz batendo no canto arredondado. */
+  --brilho: inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4);
 }
 
 html,
 body {
   background:
-    radial-gradient(1100px 640px at 12% -8%, #16202c 0%, transparent 55%),
-    radial-gradient(900px 560px at 96% 104%, #1d1416 0%, transparent 55%),
-    #0a0e13;
-  color: #e8eef5;
+    radial-gradient(1200px 700px at 8% -10%, #1c1a1e 0%, transparent 58%),
+    radial-gradient(900px 560px at 98% 106%, #2a0e10 0%, transparent 55%),
+    #0b0a0c;
+  background-attachment: fixed;
+  color: #f2f0ee;
   -webkit-tap-highlight-color: transparent;
   min-height: 100%;
 }
 
-/* Área segura em iPhone com notch */
 body {
   padding-bottom: env(safe-area-inset-bottom);
 }
 
 @layer components {
+  /* ------------------------------------------------- superfícies foscas -- */
   .cartao {
-    @apply bg-cartao border border-borda rounded-2xl p-4;
+    @apply bg-cartao/85 border border-borda rounded-[20px] p-4;
+    box-shadow: var(--brilho);
   }
+
+  /* ------------------------------------------------- camadas flutuantes -- */
+  /* Aqui o blur vale o custo: são poucas e ficam por cima do conteúdo. */
+  .vidro {
+    background: var(--vidro);
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+    backdrop-filter: blur(22px) saturate(180%);
+    border: 1px solid var(--rim);
+    box-shadow: var(--brilho), 0 8px 28px rgba(0, 0, 0, 0.55);
+  }
+  .vidro-suave {
+    background: var(--vidro);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid var(--rim);
+    box-shadow: var(--brilho);
+  }
+
   .rotulo {
     @apply text-[10px] font-bold tracking-widest uppercase text-texto3 mb-2;
   }
+
   .campo {
-    @apply w-full bg-painel border border-borda rounded-xl px-3.5 py-3 text-[15px]
-           text-texto placeholder:text-texto3 outline-none
-           focus:border-borda2 focus:ring-2 focus:ring-ok/20 transition;
+    @apply w-full bg-painel/80 border border-borda rounded-[14px] px-3.5 py-3
+           text-[15px] text-texto placeholder:text-texto3 outline-none
+           focus:border-borda2 focus:bg-painel transition;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
+  .campo:focus {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 0 0 3px rgba(240, 233, 223, 0.1);
+  }
+
   .btn {
-    @apply w-full rounded-xl px-4 py-3.5 text-[15px] font-bold transition
-           flex items-center justify-center gap-2 disabled:opacity-40
+    @apply w-full rounded-[16px] px-4 py-3.5 text-[15px] font-bold transition
+           flex items-center justify-center gap-2 disabled:opacity-35
            disabled:cursor-not-allowed active:scale-[.985];
   }
+
+  /* Ação principal: osso preenchido. Nunca vermelho — o vermelho é do
+     perigo, e um botão de confirmar não deve parecer um aviso. */
   .btn-pri {
-    @apply btn bg-ok text-[#04231b] hover:brightness-110
-           shadow-[0_6px_20px_rgba(46,230,168,.22)];
+    @apply btn text-okEscuro;
+    background: linear-gradient(180deg, #fbf7f1 0%, #e8dfd2 100%);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      0 8px 24px rgba(240, 233, 223, 0.14);
   }
+  .btn-pri:hover:not(:disabled) {
+    filter: brightness(1.04);
+  }
+
   .btn-sec {
-    @apply btn bg-painel text-texto border border-borda2 hover:bg-[#22303f];
+    @apply btn text-texto;
+    background: var(--vidro-forte);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid var(--rim);
+    box-shadow: var(--brilho);
   }
+  .btn-sec:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  /* Destrutivo: vermelho VAZADO. Cheio convida, vazado alerta — é assim que
+     o iOS separa "Salvar" de "Excluir" usando a mesma cor. */
   .btn-perigo {
-    @apply btn bg-sangue/15 text-sangue border border-sangue/40 hover:bg-sangue/25;
+    @apply btn bg-transparent text-sangue;
+    border: 1.5px solid rgba(237, 31, 37, 0.45);
   }
+  .btn-perigo:hover:not(:disabled) {
+    background: rgba(237, 31, 37, 0.1);
+    border-color: rgba(237, 31, 37, 0.7);
+  }
+
   .selo {
-    @apply text-[10px] font-bold px-2 py-1 rounded-md tracking-wide;
+    @apply text-[10px] font-bold px-2 py-1 rounded-[8px] tracking-wide;
   }
 }
 
-/* Scrollbar discreta */
+/* Quem pediu menos transparência ou menos movimento não leva blur: além de
+   acessível, é o caminho rápido em aparelho fraco. */
+@media (prefers-reduced-transparency: reduce), (prefers-reduced-motion: reduce) {
+  .vidro,
+  .vidro-suave,
+  .btn-sec {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: #1a181d;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-thumb {
-  background: #243244;
+  background: #2a272e;
   border-radius: 99px;
 }

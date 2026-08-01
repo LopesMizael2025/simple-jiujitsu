@@ -11,7 +11,7 @@ export default function Vitrine() {
   return (
     <main className="min-h-dvh">
       {/* ------------------------------------------------------- topo --- */}
-      <header className="sticky top-0 z-20 bg-fundo/92 backdrop-blur border-b border-borda">
+      <header className="sticky top-0 z-20 vidro !border-x-0 !border-t-0 !shadow-none">
         <div className="max-w-4xl mx-auto px-5 py-3 flex items-center gap-3">
           <Image src="/simbolo-claro.png" alt="" width={30} height={30} />
           <span className="font-extrabold text-[17px] tracking-tight flex-1">Simple</span>
@@ -20,7 +20,7 @@ export default function Vitrine() {
           </Link>
           <Link
             href="/cadastro"
-            className="text-[13px] font-bold text-[#04231b] bg-ok rounded-lg px-4 py-2.5"
+            className="text-[13px] font-bold text-okEscuro bg-ok rounded-[12px] px-4 py-2.5 border border-white/50"
           >
             Criar conta
           </Link>
@@ -33,7 +33,7 @@ export default function Vitrine() {
         <h1 className="mt-7 text-[34px] sm:text-[44px] font-extrabold tracking-tight leading-[1.08]">
           Uma foto do tatame
           <br />
-          <span className="text-ok">marca a turma inteira</span>
+          <span className="text-sangue">marca a turma inteira</span>
         </h1>
         <p className="mt-5 text-texto2 text-[15px] leading-relaxed max-w-lg mx-auto">
           O professor tira uma foto no fim da aula. O Simple reconhece os alunos, marca a presença e
@@ -42,7 +42,7 @@ export default function Vitrine() {
         <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
           <Link
             href="/cadastro"
-            className="font-bold text-[15px] text-[#04231b] bg-ok rounded-xl px-7 py-3.5 shadow-[0_8px_28px_rgba(46,230,168,.2)]"
+            className="font-bold text-[15px] text-[#17151A] bg-ok rounded-xl px-7 py-3.5 shadow-[0_8px_28px_rgba(240,233,223,.16)]"
           >
             Criar minha academia
           </Link>
@@ -87,7 +87,7 @@ export default function Vitrine() {
       {/* -------------------------------------------------------- LGPD --- */}
       <section className="max-w-4xl mx-auto px-5 pb-16">
         <div className="cartao">
-          <div className="rotulo text-ok">Biometria feita com cuidado</div>
+          <div className="rotulo text-sangue">Biometria feita com cuidado</div>
           <div className="space-y-3.5 text-[13.5px] text-texto2 leading-relaxed">
             <p>
               <b className="text-texto">Guardamos um vetor, não o rosto.</b> O reconhecimento roda no
@@ -120,7 +120,7 @@ export default function Vitrine() {
         </p>
         <Link
           href="/cadastro"
-          className="inline-block mt-6 font-bold text-[15px] text-[#04231b] bg-ok rounded-xl px-7 py-3.5"
+          className="inline-block mt-6 font-bold text-[15px] text-[#17151A] bg-ok rounded-xl px-7 py-3.5"
         >
           Criar conta grátis
         </Link>
@@ -145,8 +145,8 @@ export default function Vitrine() {
 function Cartao({ titulo, texto, d }: { titulo: string; texto: string; d: string }) {
   return (
     <div className="cartao">
-      <div className="w-10 h-10 rounded-xl bg-ok/10 grid place-items-center mb-3">
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#2EE6A8" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+      <div className="w-10 h-10 rounded-[13px] bg-sangue/12 border border-sangue/25 grid place-items-center mb-3">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#ED1F25" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
           <path d={d} />
         </svg>
       </div>

@@ -72,8 +72,8 @@ export default async function AlunoDetalhe({ params }: { params: { id: string } 
       {meta > 0 && (
         <section className="cartao">
           <div className="rotulo">Próximo grau</div>
-          <div className="h-1.5 bg-[#1c2836] rounded-full overflow-hidden">
-            <div className="h-full rounded-full bg-gradient-to-r from-[#12b98a] to-ok" style={{ width: `${pct}%` }} />
+          <div className="h-1.5 bg-[#242128] rounded-full overflow-hidden">
+            <div className="h-full rounded-full bg-gradient-to-r from-[#C9BFB1] to-ok" style={{ width: `${pct}%` }} />
           </div>
           <div className="flex justify-between mt-2.5 text-[11.5px]">
             <span className="text-texto2">
@@ -146,7 +146,7 @@ export default async function AlunoDetalhe({ params }: { params: { id: string } 
           <div className="divide-y divide-borda -my-1">
             {(presencas as any[]).map((p) => (
               <div key={p.id} className="flex items-center gap-3 py-2.5">
-                <span className="selo bg-[#1e2a38] text-texto2 shrink-0">
+                <span className="selo bg-[#242128] text-texto2 shrink-0">
                   {new Date(p.aula?.data ?? p.criado_em).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })}
                 </span>
                 <div className="min-w-0 flex-1">

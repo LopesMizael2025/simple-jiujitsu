@@ -12,7 +12,7 @@ export function Legal({
 }) {
   return (
     <main className="min-h-dvh">
-      <header className="sticky top-0 z-20 bg-fundo/92 backdrop-blur border-b border-borda">
+      <header className="sticky top-0 z-20 vidro !border-x-0 !border-t-0 !shadow-none">
         <div className="max-w-2xl mx-auto px-5 py-3 flex items-center gap-3">
           <Link href="/" className="flex items-center gap-2.5">
             <Image src="/simbolo-claro.png" alt="" width={26} height={26} />

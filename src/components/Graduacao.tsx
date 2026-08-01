@@ -78,7 +78,7 @@ export function SeletorGraduacao({
                   key={i}
                   className="w-4 h-6 rounded-sm transition"
                   style={{
-                    background: i < graus ? atual?.cor_hex ?? "#2EE6A8" : "#243244",
+                    background: i < graus ? atual?.cor_hex ?? "#F0E9DF" : "#2A272E",
                     boxShadow: i < graus ? "0 0 0 1px rgba(255,255,255,.18) inset" : "none",
                   }}
                 />

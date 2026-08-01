@@ -63,7 +63,7 @@ export function Shell({
 
   return (
     <div className="min-h-dvh pb-24">
-      <header className="sticky top-0 z-20 bg-fundo/92 backdrop-blur border-b border-borda">
+      <header className="sticky top-0 z-20 vidro !border-x-0 !border-t-0 !rounded-none !shadow-none">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
           <Link href="/inicio" className="shrink-0">
             <Image src="/simbolo-claro.png" alt="Simple" width={30} height={30} />
@@ -88,7 +88,7 @@ export function Shell({
 
       <main className="max-w-2xl mx-auto px-4 py-4 space-y-3">{children}</main>
 
-      <nav className="fixed bottom-0 inset-x-0 z-20 bg-[#0b1219]/96 backdrop-blur border-t border-borda">
+      <nav className="fixed bottom-0 inset-x-0 z-20 vidro !border-x-0 !border-b-0 !rounded-none">
         <div className="max-w-2xl mx-auto flex">
           {ITENS.map((i) => {
             const ativo = path.startsWith(i.href);
@@ -118,14 +118,14 @@ export function Selo({ tom, children }: { tom: "ok" | "atencao" | "perigo" | "ne
     ok: "bg-ok/12 text-ok",
     atencao: "bg-atencao/12 text-atencao",
     perigo: "bg-sangue/15 text-sangue",
-    neutro: "bg-[#1e2a38] text-texto2",
+    neutro: "bg-[#242128] text-texto2",
   }[tom];
   return <span className={`selo ${cores}`}>{children}</span>;
 }
 
 export function Iniciais({ nome, cor, tamanho = 38 }: { nome: string; cor?: string | null; tamanho?: number }) {
   const ini = nome.split(" ").filter(Boolean).map((p) => p[0]).slice(0, 2).join("").toUpperCase();
-  const fundo = cor || "#2EE6A8";
+  const fundo = cor || "#F0E9DF";
   return (
     <div
       className="rounded-xl grid place-items-center font-bold shrink-0"
@@ -147,7 +147,7 @@ function contraste(hex: string) {
   const r = parseInt(h.slice(0, 2), 16);
   const g = parseInt(h.slice(2, 4), 16);
   const b = parseInt(h.slice(4, 6), 16);
-  return (r * 299 + g * 587 + b * 114) / 1000 > 140 ? "#0A0E13" : "#FFFFFF";
+  return (r * 299 + g * 587 + b * 114) / 1000 > 140 ? "#0B0A0C" : "#FFFFFF";
 }
 
 /**
@@ -172,7 +172,7 @@ export function Foto({
   return (
     <div
       className="rounded-xl overflow-hidden shrink-0 bg-painel"
-      style={{ width: tamanho, height: tamanho, boxShadow: `0 0 0 2px ${cor ?? "#243244"}` }}
+      style={{ width: tamanho, height: tamanho, boxShadow: `0 0 0 2px ${cor ?? "#2A272E"}` }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={src} alt={nome} className="w-full h-full object-cover" loading="lazy" />

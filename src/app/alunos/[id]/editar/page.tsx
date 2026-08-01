@@ -277,8 +277,8 @@ export default function EditarAluno({ params }: { params: { id: string } }) {
         </section>
 
         {menor && (
-          <section className="cartao space-y-3 border-[#2c4a63]">
-            <div className="rotulo text-[#4d9fff]">Responsável legal</div>
+          <section className="cartao space-y-3 border-[#3A363F]">
+            <div className="rotulo text-[#C7C2CB]">Responsável legal</div>
             <input className="campo" placeholder="Nome do responsável" value={respNome} onChange={(e) => setRespNome(e.target.value)} />
             <div className="grid grid-cols-2 gap-3">
               <input className="campo" inputMode="tel" placeholder="Telefone" value={respTel} onChange={(e) => setRespTel(e.target.value)} />

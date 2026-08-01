@@ -86,7 +86,7 @@ export default function Cadastro() {
       <Moldura titulo="Confirme seu e-mail">
         <div className="cartao text-center space-y-4">
           <div className="w-12 h-12 mx-auto rounded-full bg-ok/12 grid place-items-center">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2EE6A8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F0E9DF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="2" y="4" width="20" height="16" rx="2" />
               <path d="m22 6-10 7L2 6" />
             </svg>
@@ -153,7 +153,7 @@ export default function Cadastro() {
             type="checkbox"
             checked={aceite}
             onChange={(e) => setAceite(e.target.checked)}
-            className="mt-0.5 w-5 h-5 shrink-0 accent-[#2EE6A8]"
+            className="mt-0.5 w-5 h-5 shrink-0 accent-[#F0E9DF]"
           />
           <span className="text-[12px] text-texto2 leading-relaxed">
             Li e aceito os <Link href="/termos" className="text-ok underline">Termos de uso</Link> e a{" "}

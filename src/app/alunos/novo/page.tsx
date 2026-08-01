@@ -200,8 +200,8 @@ export default function NovoAluno() {
 
         {/* -------------------------------------------------- responsável -- */}
         {menor && (
-          <section className="cartao space-y-3 border-[#2c4a63]">
-            <div className="rotulo text-[#4d9fff]">Responsável legal · obrigatório para menores</div>
+          <section className="cartao space-y-3 border-[#3A363F]">
+            <div className="rotulo text-[#C7C2CB]">Responsável legal · obrigatório para menores</div>
             <input className="campo" placeholder="Nome do responsável" value={respNome} onChange={(e) => setRespNome(e.target.value)} />
             <div className="grid grid-cols-2 gap-3">
               <input className="campo" inputMode="tel" placeholder="Telefone" value={respTel} onChange={(e) => setRespTel(e.target.value)} />
@@ -288,8 +288,8 @@ export default function NovoAluno() {
         </section>
 
         {/* ------------------------------------------------- consentimento -- */}
-        <section className="cartao border-[#2c4a63]">
-          <div className="rotulo text-[#4d9fff]">Consentimentos · LGPD</div>
+        <section className="cartao border-[#3A363F]">
+          <div className="rotulo text-[#C7C2CB]">Consentimentos · LGPD</div>
           <Consentimento
             titulo="Biometria facial para registro de presença"
             texto={
@@ -312,7 +312,7 @@ export default function NovoAluno() {
             ligado={consComunicacao}
             onChange={setConsComunicacao}
           />
-          <p className="text-[11px] text-[#4d9fff] mt-3 leading-relaxed">
+          <p className="text-[11px] text-[#C7C2CB] mt-3 leading-relaxed">
             Sem biometria o aluno treina normalmente — a presença é marcada na mão. Recusar nunca
             bloqueia a matrícula, e a revogação apaga o vetor na hora.
           </p>
@@ -322,7 +322,7 @@ export default function NovoAluno() {
           <button
             type="button"
             onClick={() => setDetalhes(true)}
-            className="w-full text-[13px] font-semibold text-[#4d9fff] py-3 min-h-[48px]"
+            className="w-full text-[13px] font-semibold text-[#C7C2CB] py-3 min-h-[48px]"
           >
             + Preencher nascimento, telefone e observações
           </button>
@@ -376,12 +376,12 @@ function Consentimento({
       </div>
       <span
         className={`w-[42px] h-6 rounded-full border relative shrink-0 mt-0.5 transition ${
-          ligado ? "bg-ok/15 border-ok" : "bg-[#233043] border-borda2"
+          ligado ? "bg-ok/15 border-ok" : "bg-[#242128] border-borda2"
         }`}
       >
         <span
           className={`absolute top-[2px] w-[18px] h-[18px] rounded-full transition-all ${
-            ligado ? "left-[21px] bg-ok" : "left-[2px] bg-[#6b8199]"
+            ligado ? "left-[21px] bg-ok" : "left-[2px] bg-[#827E88]"
           }`}
         />
       </span>

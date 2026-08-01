@@ -56,7 +56,7 @@ export default async function Inicio() {
     >
       <div className="grid grid-cols-2 gap-3">
         <Metrica valor={String(totalAlunos ?? 0)} texto="Alunos ativos" />
-        <Metrica valor={String(totalPresencas ?? 0)} texto="Presenças em 30 dias" cor="#2EE6A8" />
+        <Metrica valor={String(totalPresencas ?? 0)} texto="Presenças em 30 dias" cor="#F0E9DF" />
         <Metrica valor={String(aulasHoje.length)} texto="Aulas hoje" />
         <Metrica valor={String(risco?.length ?? 0)} texto="Alunos sumidos" cor={risco?.length ? "#FFB547" : undefined} />
       </div>
@@ -121,7 +121,7 @@ export default async function Inicio() {
             ))}
           </div>
           <p className="text-[11px] text-texto3 mt-3 leading-relaxed">
-            O alerta vem da queda de frequência, antes de o aluno sumir de vez. O botão verde abre o WhatsApp com a mensagem pronta.
+            O alerta vem da queda de frequência, antes de o aluno sumir de vez. O botão ao lado abre o WhatsApp com a mensagem pronta.
           </p>
         </section>
       )}

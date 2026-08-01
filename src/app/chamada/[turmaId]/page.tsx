@@ -247,7 +247,7 @@ export default function Chamada({ params }: { params: { turmaId: string } }) {
           aluno_id: aluno.id,
           nome: aluno.nome,
           faixa: aluno.faixa?.nome ?? "—",
-          cor_hex: aluno.faixa?.cor_hex ?? "#e8eef5",
+          cor_hex: aluno.faixa?.cor_hex ?? "#F2F0EE",
           distancia: 0, // corrigido à mão: não veio de medida
         },
       ].sort((a, b) => a.face_idx - b.face_idx)
@@ -405,7 +405,7 @@ export default function Chamada({ params }: { params: { turmaId: string } }) {
           onClick={() => arquivoRef.current?.click()}
           disabled={matriculados.length === 0}
           className="w-full h-52 rounded-2xl border border-borda2 grid place-items-center relative overflow-hidden
-                     bg-gradient-to-br from-[#1d3a4d] via-[#16304a] to-[#1c2a3d] disabled:opacity-40"
+                     bg-gradient-to-br from-[#241f26] via-[#1c181f] to-[#161318] disabled:opacity-40"
         >
           <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-ok/12 to-transparent border-t border-ok/20" />
           <div className="w-16 h-16 rounded-full border-[3px] border-white/85 grid place-items-center bg-black/25 z-10">
@@ -447,7 +447,7 @@ export default function Chamada({ params }: { params: { turmaId: string } }) {
       : tom === "duvida"
         ? "border-atencao"
         : tom === "corrigido"
-          ? "border-[#4d9fff]"
+          ? "border-[#C7C2CB]"
           : "border-ok";
 
     return (
@@ -467,13 +467,13 @@ export default function Chamada({ params }: { params: { turmaId: string } }) {
           )}
           <span
             className={`absolute top-1 right-1 text-[8.5px] font-extrabold px-1.5 py-0.5 rounded backdrop-blur-sm bg-black/65 ${
-              tom === "duvida" ? "text-atencao" : tom === "corrigido" ? "text-[#4d9fff]" : "text-ok"
+              tom === "duvida" ? "text-atencao" : tom === "corrigido" ? "text-[#C7C2CB]" : "text-ok"
             }`}
           >
             {tom === "corrigido" ? "manual" : `${semelhanca}%`}
           </span>
           {marcado && (
-            <span className="absolute bottom-1 left-1 w-5 h-5 rounded-full bg-ok grid place-items-center text-[#04231b] text-[11px] font-black">
+            <span className="absolute bottom-1 left-1 w-5 h-5 rounded-full bg-ok grid place-items-center text-[#17151A] text-[11px] font-black">
               ✓
             </span>
           )}
@@ -483,7 +483,7 @@ export default function Chamada({ params }: { params: { turmaId: string } }) {
           <div className="text-[11.5px] font-semibold truncate pt-1.5">{m.nome}</div>
           <button
             onClick={() => setRostoAberto(m.face_idx)}
-            className="text-[10.5px] text-[#4d9fff] font-semibold min-h-[30px] w-full text-left"
+            className="text-[10.5px] text-[#C7C2CB] font-semibold min-h-[30px] w-full text-left"
           >
             Não é ele? Trocar
           </button>
@@ -526,7 +526,7 @@ export default function Chamada({ params }: { params: { turmaId: string } }) {
 
         {corrigidos.length > 0 && (
           <section className="cartao">
-            <div className="rotulo text-[#4d9fff]">Corrigidos por você</div>
+            <div className="rotulo text-[#C7C2CB]">Corrigidos por você</div>
             <div className="grid grid-cols-2 gap-2.5">
               {corrigidos.map((m) => cartaoRosto(m, "corrigido"))}
             </div>
@@ -557,12 +557,12 @@ export default function Chamada({ params }: { params: { turmaId: string } }) {
                   </div>
                   <span
                     className={`w-[46px] h-[28px] rounded-full border relative shrink-0 transition ${
-                      presentes[a.id] ? "bg-ok/15 border-ok" : "bg-[#233043] border-borda2"
+                      presentes[a.id] ? "bg-ok/15 border-ok" : "bg-[#242128] border-borda2"
                     }`}
                   >
                     <span
                       className={`absolute top-[2px] w-[22px] h-[22px] rounded-full transition-all ${
-                        presentes[a.id] ? "left-[21px] bg-ok" : "left-[2px] bg-[#7B8EA6]"
+                        presentes[a.id] ? "left-[21px] bg-ok" : "left-[2px] bg-[#827E88]"
                       }`}
                     />
                   </span>

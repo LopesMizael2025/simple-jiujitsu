@@ -140,7 +140,7 @@ export default function Equipe() {
                   <p className="text-[11.5px] text-texto2 mt-1.5 leading-relaxed">
                     Mande este link para essa pessoa. Ela entra com o e-mail acima.
                   </p>
-                  <div className="mt-2.5 rounded-lg bg-[#0b1219] border border-borda p-2.5 text-[11px] text-texto2 break-all leading-relaxed">
+                  <div className="mt-2.5 rounded-lg bg-[#141317] border border-borda p-2.5 text-[11px] text-texto2 break-all leading-relaxed">
                     {linkNovo.link}
                   </div>
                   <button type="button" className="btn-sec mt-2.5" onClick={() => copiar(linkNovo.link)}>

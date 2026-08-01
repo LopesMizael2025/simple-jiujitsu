@@ -93,7 +93,7 @@ export default function Alunos() {
           </Link>
           <Link
             href="/alunos/novo"
-            className="w-11 h-11 grid place-items-center bg-ok text-[#04231b] rounded-xl font-black text-xl"
+            className="w-11 h-11 grid place-items-center bg-ok text-[#17151A] rounded-xl font-black text-xl"
             aria-label="Novo aluno"
           >
             +
@@ -201,7 +201,7 @@ export default function Alunos() {
                 <div className="flex items-center gap-1.5 mt-1">
                   <span
                     className="w-2.5 h-2.5 rounded-sm shrink-0"
-                    style={{ background: a.cor_hex ?? "#5D738C" }}
+                    style={{ background: a.cor_hex ?? "#827E88" }}
                   />
                   <span className="text-[11.5px] text-texto2 truncate">
                     {a.faixa ?? "Sem faixa"} · {a.graus} {a.graus === 1 ? "grau" : "graus"} ·{" "}

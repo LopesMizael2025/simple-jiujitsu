@@ -130,7 +130,7 @@ function Aceitar() {
             Cada convite serve a uma pessoa só.
           </p>
         </div>
-        <div className="rounded-xl border border-borda bg-[#0b1219] p-3.5">
+        <div className="rounded-xl border border-borda bg-[#141317] p-3.5">
           <p className="text-[12.5px] text-texto2 leading-relaxed">
             Se você é o dono e quer abrir a sua própria academia, o caminho é outro.
           </p>
